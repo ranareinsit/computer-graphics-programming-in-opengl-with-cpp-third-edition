@@ -488,4 +488,4 @@ Mkfile.old
 dkms.conf
 
 out
-vcpkg*
+vcpkg_*
