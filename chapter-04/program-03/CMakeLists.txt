@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project("program-0206")
+project("program-0403")
 
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
@@ -7,9 +7,8 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(soil2 CONFIG REQUIRED)
 
-add_executable(program-0206 main.cpp Utils.cpp)
+add_executable(program-0403 main.cpp Utils.cpp)
 
-
-target_link_libraries(program-0206 PRIVATE OpenGL::GL GLEW::GLEW glfw glm::glm soil2)
+target_link_libraries(program-0403 PRIVATE OpenGL::GL GLEW::GLEW glfw glm::glm soil2)
 
 file(COPY vertShader.glsl fragShader.glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

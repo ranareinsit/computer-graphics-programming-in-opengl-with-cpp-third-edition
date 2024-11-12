@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.8)
-project("program-02")
+project("program-0202")
 
 find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 
-add_executable(program-02 main.cpp)
+add_executable(program-0202 main.cpp)
 
-target_link_libraries(program-02 PRIVATE glfw GLEW::GLEW OpenGL::GL)
+target_link_libraries(program-0202 PRIVATE glfw GLEW::GLEW OpenGL::GL)
