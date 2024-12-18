@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 3.8)
+project("program-0802")
+
+find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
+find_package(soil2 CONFIG REQUIRED)
+
+add_executable(program-0802-executable main.cpp)
+
+target_link_libraries(program-0802-executable PRIVATE OpenGL::GL GLEW::GLEW glfw glm::glm soil2 Common Torus Sphere ImportedModel)
+
+configure_file(frag1Shader.glsl frag1Shader.glsl COPYONLY)
+configure_file(frag2Shader.glsl frag2Shader.glsl COPYONLY)
+configure_file(vert1Shader.glsl vert1Shader.glsl COPYONLY)
+configure_file(vert2Shader.glsl vert2Shader.glsl COPYONLY)
+configure_file(pyr.obj pyr.obj COPYONLY)
