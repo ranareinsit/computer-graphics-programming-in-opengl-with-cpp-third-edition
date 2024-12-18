@@ -1,15 +1,15 @@
+#include "Common.h"
+#include "Sphere.h"
+#include <cmath>
+#include <fstream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp> 
+#include <glm/gtc/type_ptr.hpp> 
+#include <iostream>
 #include <SOIL2/soil2.h>
 #include <string>
-#include <iostream>
-#include <fstream>
-#include <cmath>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp> 
-#include <glm/gtc/matrix_transform.hpp> 
-#include "Sphere.h"
-#include "Utils.h"
 using namespace std;
 
 #define numVAOs 1

@@ -7,9 +7,8 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(soil2 CONFIG REQUIRED)
 
-add_executable(program-0401 main.cpp Utils.cpp)
+add_executable(program-0401-executable main.cpp)
 
-
-target_link_libraries(program-0401 PRIVATE OpenGL::GL GLEW::GLEW glfw glm::glm soil2)
+target_link_libraries(program-0401-executable PRIVATE OpenGL::GL GLEW::GLEW glfw glm::glm soil2 Common Torus Sphere ImportedModel)
 
 file(COPY vertShader.glsl fragShader.glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

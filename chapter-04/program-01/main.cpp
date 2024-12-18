@@ -6,7 +6,7 @@
 #include <cmath>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Utils.h"
+#include "Common.h"
 using namespace std;
 constexpr size_t numVAOs = 1;
 constexpr size_t numVBOs = 2;
@@ -132,7 +132,10 @@ void display(GLFWwindow* window, double currentTime) {
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
+		// glEnable(GL_COLOR_LOGIC_OP);
+		// glLogicOp(GL_XOR);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
+		// glDisable(GL_COLOR_LOGIC_OP);
 	}
 }
 

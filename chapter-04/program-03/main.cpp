@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Utils.h"
+#include "Common.h"
 
 // Number of Vertex Array Objects and Vertex Buffer Objects
 constexpr int NUM_VAOS = 1;

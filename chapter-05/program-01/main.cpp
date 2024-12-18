@@ -8,7 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "Utils.h"
+#include "Common.h"
 
 constexpr int numVAOs = 1;
 constexpr int numVBOs = 2;

@@ -1,7 +1,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
+#include "Common.h"
 #include "ImportedModel.h"
-#include "Utils.h"
 #include <cstdlib>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -10,6 +10,7 @@
 #include <glm/fwd.hpp>
 #include <glm/gtc/type_ptr.inl>
 #include <vector>
+
 
 using namespace std;
 

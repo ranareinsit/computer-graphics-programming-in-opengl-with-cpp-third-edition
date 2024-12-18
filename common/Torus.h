@@ -1,8 +1,8 @@
 #include <cmath>
 #include <vector>
 #include <glm/glm.hpp>
-class Torus
-{
+
+class Torus {
 private:
 	int numVertices;
 	int numIndices;

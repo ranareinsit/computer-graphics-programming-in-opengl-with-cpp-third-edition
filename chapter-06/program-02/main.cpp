@@ -1,5 +1,6 @@
+#include "Common.h"
+#include "Sphere.h"
 #include "Torus.h"
-#include "Utils.h"
 #include <fstream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>

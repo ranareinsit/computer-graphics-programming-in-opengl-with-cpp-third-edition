@@ -14,6 +14,9 @@ endif()
 
 project ("computer-graphics-programming-in-opengl-with-cpp-third-edition")
 
+# common
+add_subdirectory(common)
+#
 add_subdirectory(chapter-02/program-01)
 add_subdirectory(chapter-02/program-02)
 add_subdirectory(chapter-02/program-03)
@@ -32,4 +35,8 @@ add_subdirectory(chapter-05/program-01)
 add_subdirectory(chapter-06/program-01)
 add_subdirectory(chapter-06/program-02)
 add_subdirectory(chapter-06/program-03)
+#
+add_subdirectory(chapter-07/program-01)
+#
+add_subdirectory(chapter-08/program-01)
 #

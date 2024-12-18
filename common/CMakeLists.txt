@@ -1,0 +1,16 @@
+find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
+find_package(soil2 CONFIG REQUIRED)
+
+add_library(Common STATIC Common.cpp)
+add_library(Torus STATIC Torus.cpp)
+add_library(Sphere STATIC Sphere.cpp)
+add_library(ImportedModel STATIC ImportedModel.cpp)
+
+target_include_directories(Common PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(Common PUBLIC OpenGL::GL GLEW::GLEW glfw glm::glm soil2)
+target_link_libraries(Torus  PUBLIC OpenGL::GL GLEW::GLEW glfw glm::glm soil2)
+target_link_libraries(Sphere PUBLIC OpenGL::GL GLEW::GLEW glfw glm::glm soil2)
+target_link_libraries(ImportedModel PUBLIC OpenGL::GL GLEW::GLEW glfw glm::glm soil2)

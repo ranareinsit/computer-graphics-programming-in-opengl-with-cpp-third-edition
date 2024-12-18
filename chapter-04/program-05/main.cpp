@@ -8,7 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Utils.h"
+#include "Common.h"
 
 // Constants for Vertex Array Objects (VAOs) and Vertex Buffer Objects (VBOs)
 constexpr int NUM_VAOS = 1;
