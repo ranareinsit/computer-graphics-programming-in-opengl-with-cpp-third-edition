@@ -1,14 +1,17 @@
 #define GLM_ENABLE_EXPERIMENTAL
+
+#include "Common.h"
+#include <cmath>
+#include <fstream>
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp> 
+#include <glm/gtc/type_ptr.hpp> 
+#include <glm/gtx/euler_angles.hpp>
+#include <iostream>
 #include <SOIL2/soil2.h>
 #include <string>
-#include <iostream>
-#include <fstream>
-#include "Common.h"
-#include <cstdio>
-#include <iosfwd>
-#include <malloc.h>
-
 using namespace std;
 
 Utils::Utils() {}
@@ -29,18 +32,12 @@ void Utils::displayComputeShaderLimits() {
 	printf("max local work group invocations %i\n", work_grp_inv);
 }
 
-string Utils::readShaderFile(const char* filePath)
-{
+string Utils::readShaderFile(const char* filePath) {
 	string content;
-
 	ifstream fileStream(filePath, ios::in);
-	if (!fileStream.is_open())
-	{
-		throw "Unable to open file.";
-	}
+	if (!fileStream.is_open()) { throw "Unable to open file."; }
 	string line = "";
-	while (!fileStream.eof())
-	{
+	while (!fileStream.eof()) {
 		getline(fileStream, line);
 		content.append(line + "\n");
 	}
@@ -48,12 +45,10 @@ string Utils::readShaderFile(const char* filePath)
 	return content;
 }
 
-bool Utils::checkOpenGLError()
-{
+bool Utils::checkOpenGLError() {
 	bool foundError = false;
 	int glErr = glGetError();
-	while (glErr != GL_NO_ERROR)
-	{
+	while (glErr != GL_NO_ERROR) {
 		cout << "glError: " << glErr << endl;
 		foundError = true;
 		glErr = glGetError();
@@ -61,14 +56,12 @@ bool Utils::checkOpenGLError()
 	return foundError;
 }
 
-void Utils::printShaderLog(GLuint shader)
-{
+void Utils::printShaderLog(GLuint shader) {
 	int len = 0;
 	int chWrittn = 0;
 	char* log;
 	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &len);
-	if (len > 0)
-	{
+	if (len > 0) {
 		log = (char*)malloc(len);
 		glGetShaderInfoLog(shader, len, &chWrittn, log);
 		cout << "Shader Info Log: " << log << endl;
@@ -76,15 +69,13 @@ void Utils::printShaderLog(GLuint shader)
 	}
 }
 
-GLuint Utils::prepareShader(int shaderTYPE, const char* shaderPath)
-{
+GLuint Utils::prepareShader(int shaderTYPE, const char* shaderPath) {
 	GLint shaderCompiled;
 	string shaderStr = readShaderFile(shaderPath);
 	const char* shaderSrc = shaderStr.c_str();
 	GLuint shaderRef = glCreateShader(shaderTYPE);
 
-	if (shaderRef == 0 || shaderRef == GL_INVALID_ENUM)
-	{
+	if (shaderRef == 0 || shaderRef == GL_INVALID_ENUM) {
 		printf("Error: Could not create shader \"%s\" of type:%d\n", shaderPath, shaderTYPE);
 		return 0;
 	}
@@ -94,8 +85,7 @@ GLuint Utils::prepareShader(int shaderTYPE, const char* shaderPath)
 	checkOpenGLError();
 
 	glGetShaderiv(shaderRef, GL_COMPILE_STATUS, &shaderCompiled);
-	if (shaderCompiled != GL_TRUE)
-	{
+	if (shaderCompiled != GL_TRUE) {
 		if (shaderTYPE == GL_VERTEX_SHADER) cout << "Vertex ";
 		if (shaderTYPE == GL_TESS_CONTROL_SHADER) cout << "Tess Control ";
 		if (shaderTYPE == GL_TESS_EVALUATION_SHADER) cout << "Tess Eval ";
@@ -105,12 +95,10 @@ GLuint Utils::prepareShader(int shaderTYPE, const char* shaderPath)
 		cout << "shader compilation error for shader: '" << shaderPath << "'." << endl;
 		printShaderLog(shaderRef);
 	}
-
 	return shaderRef;
 }
 
-void Utils::printProgramLog(int prog)
-{
+void Utils::printProgramLog(int prog) {
 	int len = 0;
 	int chWrittn = 0;
 	char* log;
@@ -123,22 +111,19 @@ void Utils::printProgramLog(int prog)
 	}
 }
 
-int Utils::finalizeShaderProgram(GLuint sprogram)
-{
+int Utils::finalizeShaderProgram(GLuint sprogram) {
 	GLint linked;
 	glLinkProgram(sprogram);
 	checkOpenGLError();
 	glGetProgramiv(sprogram, GL_LINK_STATUS, &linked);
-	if (linked != 1)
-	{
+	if (linked != 1) {
 		cout << "linking failed" << endl;
 		printProgramLog(sprogram);
 	}
 	return sprogram;
 }
 
-GLuint Utils::createShaderProgram(const char* cp)
-{
+GLuint Utils::createShaderProgram(const char* cp) {
 	GLuint cShader = prepareShader(GL_COMPUTE_SHADER, cp);
 	GLuint cprogram = glCreateProgram();
 	glAttachShader(cprogram, cShader);
@@ -146,8 +131,7 @@ GLuint Utils::createShaderProgram(const char* cp)
 	return cprogram;
 }
 
-GLuint Utils::createShaderProgram(const char* vp, const char* fp)
-{
+GLuint Utils::createShaderProgram(const char* vp, const char* fp) {
 	GLuint vShader = prepareShader(GL_VERTEX_SHADER, vp);
 	GLuint fShader = prepareShader(GL_FRAGMENT_SHADER, fp);
 	GLuint vfprogram = glCreateProgram();
@@ -157,8 +141,7 @@ GLuint Utils::createShaderProgram(const char* vp, const char* fp)
 	return vfprogram;
 }
 
-GLuint Utils::createShaderProgram(const char* vp, const char* gp, const char* fp)
-{
+GLuint Utils::createShaderProgram(const char* vp, const char* gp, const char* fp) {
 	GLuint vShader = prepareShader(GL_VERTEX_SHADER, vp);
 	GLuint gShader = prepareShader(GL_GEOMETRY_SHADER, gp);
 	GLuint fShader = prepareShader(GL_FRAGMENT_SHADER, fp);
@@ -170,8 +153,7 @@ GLuint Utils::createShaderProgram(const char* vp, const char* gp, const char* fp
 	return vgfprogram;
 }
 
-GLuint Utils::createShaderProgram(const char* vp, const char* tCS, const char* tES, const char* fp)
-{
+GLuint Utils::createShaderProgram(const char* vp, const char* tCS, const char* tES, const char* fp) {
 	GLuint vShader = prepareShader(GL_VERTEX_SHADER, vp);
 	GLuint tcShader = prepareShader(GL_TESS_CONTROL_SHADER, tCS);
 	GLuint teShader = prepareShader(GL_TESS_EVALUATION_SHADER, tES);
@@ -185,8 +167,7 @@ GLuint Utils::createShaderProgram(const char* vp, const char* tCS, const char* t
 	return vtfprogram;
 }
 
-GLuint Utils::createShaderProgram(const char* vp, const char* tCS, const char* tES, char* gp, const char* fp)
-{
+GLuint Utils::createShaderProgram(const char* vp, const char* tCS, const char* tES, char* gp, const char* fp) {
 	GLuint vShader = prepareShader(GL_VERTEX_SHADER, vp);
 	GLuint tcShader = prepareShader(GL_TESS_CONTROL_SHADER, tCS);
 	GLuint teShader = prepareShader(GL_TESS_EVALUATION_SHADER, tES);
@@ -202,8 +183,7 @@ GLuint Utils::createShaderProgram(const char* vp, const char* tCS, const char* t
 	return vtgfprogram;
 }
 
-GLuint Utils::loadCubeMap(const char* mapDir)
-{
+GLuint Utils::loadCubeMap(const char* mapDir) {
 	GLuint textureRef;
 	string xp = mapDir; xp = xp + "/xp.jpg";
 	string xn = mapDir; xn = xn + "/xn.jpg";
@@ -211,15 +191,19 @@ GLuint Utils::loadCubeMap(const char* mapDir)
 	string yn = mapDir; yn = yn + "/yn.jpg";
 	string zp = mapDir; zp = zp + "/zp.jpg";
 	string zn = mapDir; zn = zn + "/zn.jpg";
-	textureRef = SOIL_load_OGL_cubemap(xp.c_str(), xn.c_str(), yp.c_str(), yn.c_str(), zp.c_str(), zn.c_str(),
-		SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
+	textureRef = SOIL_load_OGL_cubemap(
+		xp.c_str(), xn.c_str(),
+		yp.c_str(), yn.c_str(),
+		zp.c_str(), zn.c_str(),
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_MIPMAPS
+	);
 	if (textureRef == 0) cout << "didnt find cube map image file" << endl;
-
 	return textureRef;
 }
 
-GLuint Utils::loadTexture(const char* texImagePath)
-{
+GLuint Utils::loadTexture(const char* texImagePath) {
 	GLuint textureRef;
 	textureRef = SOIL_load_OGL_texture(texImagePath, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
 	if (textureRef == 0) cout << "didnt find texture file " << texImagePath << endl;

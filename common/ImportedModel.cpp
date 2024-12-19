@@ -1,7 +1,7 @@
-#include <fstream>
-#include <sstream>
-#include <glm/glm.hpp>
 #include "ImportedModel.h"
+#include <fstream>
+#include <glm/glm.hpp>
+#include <sstream>
 
 using namespace std;
 

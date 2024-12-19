@@ -1,8 +1,7 @@
 #include <cmath>
-#include <vector>
 #include <glm/glm.hpp>
-class Sphere
-{
+#include <vector>
+class Sphere {
 private:
 	int numVertices;
 	int numIndices;

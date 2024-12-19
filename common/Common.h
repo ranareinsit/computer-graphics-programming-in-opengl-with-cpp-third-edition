@@ -1,15 +1,15 @@
 #include <cmath>
-#include <cstdio>
 #include <fstream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <SOIL2/soil2.h>
 #include <string>
 #include <vector>
 
-class Utils
-{
+class Utils {
 private:
 	static std::string readShaderFile(const char* filePath);
 	static void printShaderLog(GLuint shader);

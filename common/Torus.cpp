@@ -1,8 +1,8 @@
-#include <cmath>
-#include <vector>
-#include <iostream>
-#include <glm/gtc/matrix_transform.hpp>
 #include "Torus.h"
+#include <cmath>
+#include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
+#include <vector>
 using namespace std;
 
 Torus::Torus() {
