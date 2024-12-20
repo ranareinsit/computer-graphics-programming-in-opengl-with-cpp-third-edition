@@ -45,3 +45,9 @@ add_subdirectory(chapter-09/program-01)
 add_subdirectory(chapter-09/program-02)
 add_subdirectory(chapter-09/program-03)
 #
+add_subdirectory(chapter-10/program-01)
+add_subdirectory(chapter-10/program-02)
+add_subdirectory(chapter-10/program-03)
+add_subdirectory(chapter-10/program-04-01)
+add_subdirectory(chapter-10/program-04-02)
+#
