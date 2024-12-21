@@ -57,7 +57,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
-    auto window = glfwCreateWindow(600, 600, "chapter-02 program-02", nullptr, nullptr);
+    auto window = glfwCreateWindow(600, 600, "program 0202", nullptr, nullptr);
     if (!window) {
         std::cerr << "Failed to create GLFW window\n";
         glfwTerminate();

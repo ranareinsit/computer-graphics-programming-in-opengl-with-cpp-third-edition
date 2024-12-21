@@ -11,4 +11,5 @@ add_executable(program-0401-executable main.cpp)
 
 target_link_libraries(program-0401-executable PRIVATE OpenGL::GL GLEW::GLEW glfw glm::glm soil2 Common Torus Sphere ImportedModel)
 
-file(COPY vertShader.glsl fragShader.glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+configure_file(vertShader.glsl vertShader.glsl COPYONLY)
+configure_file(fragShader.glsl fragShader.glsl COPYONLY)

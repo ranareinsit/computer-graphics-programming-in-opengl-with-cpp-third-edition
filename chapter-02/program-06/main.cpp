@@ -41,7 +41,7 @@ int main() {
     if (!glfwInit()) exit(EXIT_FAILURE);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    auto window = glfwCreateWindow(400, 200, "chapter-02 program-06", nullptr, nullptr);
+    auto window = glfwCreateWindow(400, 200, "program 0206", nullptr, nullptr);
     if (!window) exit(EXIT_FAILURE);
 
     glfwMakeContextCurrent(window);

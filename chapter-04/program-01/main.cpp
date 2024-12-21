@@ -77,7 +77,6 @@ void setupVertices(void) {
 	glGenVertexArrays(1, vao);
 	glBindVertexArray(vao[0]);
 	glGenBuffers(numVBOs, vbo);
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexPositions), vertexPositions, GL_STATIC_DRAW);
 }
@@ -132,10 +131,7 @@ void display(GLFWwindow* window, double currentTime) {
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		// glEnable(GL_COLOR_LOGIC_OP);
-		// glLogicOp(GL_XOR);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-		// glDisable(GL_COLOR_LOGIC_OP);
 	}
 }
 
@@ -143,7 +139,7 @@ int main() {
 	if (!glfwInit()) { exit(EXIT_FAILURE); }
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	auto window = glfwCreateWindow(860, 640, "chapter-04 program-01", nullptr, nullptr);
+	auto window = glfwCreateWindow(800, 800, "program 0401", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 	if (glewInit() != GLEW_OK) { exit(EXIT_FAILURE); }
 	glfwSwapInterval(1);
