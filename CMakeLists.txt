@@ -74,3 +74,11 @@ add_subdirectory(chapter-14/program-07)
 add_subdirectory(chapter-14/program-08)
 add_subdirectory(chapter-14/program-09)
 #
+add_subdirectory(chapter-15/program-01)
+add_subdirectory(chapter-15/program-02)
+add_subdirectory(chapter-15/program-03)
+add_subdirectory(chapter-15/program-04)
+add_subdirectory(chapter-15/program-05)
+add_subdirectory(chapter-15/program-07)
+add_subdirectory(chapter-15/program-08)
+#

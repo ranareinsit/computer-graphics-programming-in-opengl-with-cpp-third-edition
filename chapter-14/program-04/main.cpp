@@ -14,8 +14,6 @@
 #include <cstdint>
 #include <iomanip>
 #include <iostream>
-
-
 using namespace std;
 
 float toRadians(float degrees) { return (degrees * 2.0f * 3.14159f) / 360.0f; }
@@ -30,9 +28,9 @@ GLuint vao[numVAOs];
 GLuint vbo[numVBOs];
 
 GLuint stripesTexture;
-const int texHeight = 200;
-const int texWidth = 200;
-const int texDepth = 200;
+const int texHeight = 512;
+const int texWidth = 512;
+const int texDepth = 512;
 double tex3Dpattern[texHeight][texWidth][texDepth];
 
 GLuint mvLoc, projLoc;
@@ -47,17 +45,18 @@ void fillDataArray(GLubyte data[]) {
 	for (int i = 0; i < texHeight; i++) {
 		for (int j = 0; j < texWidth; j++) {
 			for (int k = 0; k < texDepth; k++) {
+				auto base = i * (texWidth * texHeight * 4) + j * (texHeight * 4) + k * 4;
 				if (tex3Dpattern[i][j][k] == 1.0) {
-					data[i * (texWidth * texHeight * 4) + j * (texHeight * 4) + k * 4 + 0] = (GLubyte)255;
-					data[i * (texWidth * texHeight * 4) + j * (texHeight * 4) + k * 4 + 1] = (GLubyte)255;
-					data[i * (texWidth * texHeight * 4) + j * (texHeight * 4) + k * 4 + 2] = (GLubyte)0;
-					data[i * (texWidth * texHeight * 4) + j * (texHeight * 4) + k * 4 + 3] = (GLubyte)0;
+					data[base + 0] = (GLubyte)((rand() / (RAND_MAX + 1.0)) * 255);
+					data[base + 1] = (GLubyte)((rand() / (RAND_MAX + 1.0)) * 255);
+					data[base + 2] = (GLubyte)((rand() / (RAND_MAX + 1.0)) * 255);
+					data[base + 3] = (GLubyte)0;
 				}
 				else {
-					data[i * (texWidth * texHeight * 4) + j * (texHeight * 4) + k * 4 + 0] = (GLubyte)0;
-					data[i * (texWidth * texHeight * 4) + j * (texHeight * 4) + k * 4 + 1] = (GLubyte)0;
-					data[i * (texWidth * texHeight * 4) + j * (texHeight * 4) + k * 4 + 2] = (GLubyte)255;
-					data[i * (texWidth * texHeight * 4) + j * (texHeight * 4) + k * 4 + 3] = (GLubyte)0;
+					data[base + 0] = (GLubyte)0;
+					data[base + 1] = (GLubyte)0;
+					data[base + 2] = (GLubyte)0;
+					data[base + 3] = (GLubyte)0;
 				}
 			}
 		}
@@ -85,9 +84,9 @@ void generate3Dpattern() {
 	for (int x = 0; x < texHeight; x++) {
 		for (int y = 0; y < texWidth; y++) {
 			for (int z = 0; z < texDepth; z++) {
-				if (z > 0) {
-					tex3Dpattern[x][y][z] = ((x ^ y) & z) / z;
-				}
+				bool check = (x % 2) + (y % 2) + (z % 2) < 1.1f;
+				if (check) { tex3Dpattern[x][y][z] = 1; }
+				else { tex3Dpattern[x][y][z] = 0; }
 			}
 		}
 	}
