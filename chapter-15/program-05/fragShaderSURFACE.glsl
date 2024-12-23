@@ -1,30 +1,25 @@
 #version 430
-
 in vec3 varyingNormal;
 in vec3 varyingLightDir;
 in vec3 varyingVertPos;
 in vec2 tc;
 in vec4 glp;
 out vec4 color;
-
 layout (binding=0) uniform sampler2D reflectTex;
 layout (binding=1) uniform sampler2D refractTex;
 layout (binding=2) uniform sampler3D noiseTex;
-
 struct PositionalLight {
 	vec4 ambient;  
 	vec4 diffuse;  
 	vec4 specular;  
 	vec3 position;
 };
-
 struct Material {
 	vec4 ambient;  
 	vec4 diffuse;  
 	vec4 specular;  
 	float shininess;
 };
-
 uniform vec4 globalAmbient;
 uniform PositionalLight light;
 uniform Material material;
@@ -32,7 +27,6 @@ uniform mat4 mv_matrix;
 uniform mat4 proj_matrix;
 uniform mat4 norm_matrix;
 uniform int isAbove;
-
 vec3 estimateWaveNormal(float offset, float mapScale, float hScale) {
 	float h1 = (texture(noiseTex, vec3(((tc.s)    )*mapScale, 0.5, ((tc.t)+offset)*mapScale))).r * hScale;
 	float h2 = (texture(noiseTex, vec3(((tc.s)-offset)*mapScale, 0.5, ((tc.t)-offset)*mapScale))).r * hScale;
@@ -45,7 +39,6 @@ vec3 estimateWaveNormal(float offset, float mapScale, float hScale) {
 	vec3 normEst = normalize(cross(v4,v5));
 	return normEst;
 }
-
 void main(void) {
 	vec4 fogColor = vec4(0.0, 0.0, 0.2, 1.0);
 	float fogStart = 10.0;

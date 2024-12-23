@@ -1,38 +1,31 @@
 #version 430
-
 in vec3 varyingLightDir;
 in vec3 varyingVertPos;
 in vec3 varyingNormal;
 in vec3 varyingTangent;
 in vec2 tc;
-
 out vec4 fragColor;
-
 layout (binding=0) uniform sampler2D t;
 layout (binding=1) uniform sampler2D n;
 layout (binding=2) uniform sampler2D h;
-
 struct PositionalLight {
 	vec4 ambient;  
 	vec4 diffuse;  
 	vec4 specular;  
 	vec3 position;
 };
-
 struct Material {
 	vec4 ambient;  
 	vec4 diffuse;  
 	vec4 specular;  
 	float shininess;
 };
-
 uniform vec4 globalAmbient;
 uniform PositionalLight light;
 uniform Material material;
 uniform mat4 mv_matrix;	 
 uniform mat4 proj_matrix;
 uniform mat4 norm_matrix;
-
 vec3 CalcBumpedNormal() {
 	vec3 Normal = normalize(varyingNormal);
 	vec3 Tangent = normalize(varyingTangent);
@@ -45,7 +38,6 @@ vec3 CalcBumpedNormal() {
 	NewNormal = normalize(NewNormal);
 	return NewNormal;
 }
-
 void main(void) {
 	vec3 L = normalize(varyingLightDir);
 	vec3 V = normalize(-varyingVertPos);

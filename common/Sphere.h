@@ -12,7 +12,6 @@ private:
 	std::vector<glm::vec3> tangents;
 	void init(int);
 	float toRadians(float degrees);
-
 public:
 	Sphere();
 	Sphere(int prec);

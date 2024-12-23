@@ -12,26 +12,20 @@
 #include <SOIL2/soil2.h>
 #include <string>
 using namespace std;
-
 float toRadians(float degrees) { return (degrees * 2.0f * 3.14159f) / 360.0f; }
-
 #define numVAOs 1
 #define numVBOs 3
-
 float cameraX, cameraY, cameraZ;
 float objLocX, objLocY, objLocZ;
 GLuint renderingProgram;
 GLuint vao[numVAOs];
 GLuint vbo[numVBOs];
-
 glm::vec3 lightLoc = glm::vec3(-2.0f, 5.0f, 1.0f);
-
 GLuint noiseTexture;
 const int noiseHeight = 300;
 const int noiseWidth = 300;
 const int noiseDepth = 300;
 double noise[noiseHeight][noiseWidth][noiseDepth];
-
 GLuint mvLoc, projLoc, nLoc, tLoc;
 GLuint globalAmbLoc, ambLoc, diffLoc, specLoc, posLoc, mambLoc, mdiffLoc, mspecLoc, mshiLoc;
 int width, height;
@@ -39,20 +33,16 @@ float aspect;
 glm::mat4 pMat, vMat, mMat, mvMat, texRot, invTrMat;
 glm::vec3 currentLightPos;
 float lightPos[3];
-
 ImportedModel dolphinObj("dolphinLowPoly.obj");
 int numDolphinVertices;
-
 float globalAmbient[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 float lightAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 float lightDiffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 float lightSpecular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
 float matAmb[4] = { 0.5f, 0.35f, 0.15f, 1.0f };
 float matDif[4] = { 0.5f, 0.35f, 0.15f, 1.0f };
 float matSpe[4] = { 0.5f, 0.35f, 0.15f, 1.0f };
 float matShi = 15.0f;
-
 double smoothNoise(double zoom, double x1, double y1, double z1) {
 	double fractX = x1 - (int)x1;
 	double fractY = y1 - (int)y1;
@@ -71,7 +61,6 @@ double smoothNoise(double zoom, double x1, double y1, double z1) {
 	value += (1.0 - fractX) * (1.0 - fractY) * (1.0 - fractZ) * noise[(int)x2][(int)y2][(int)z2];
 	return value;
 }
-
 double turbulence(double x, double y, double z, double maxZoom) {
 	double sum = 0.0, zoom = maxZoom;
 	while (zoom >= 0.9) {
@@ -81,7 +70,6 @@ double turbulence(double x, double y, double z, double maxZoom) {
 	sum = 128.0 * sum / maxZoom;
 	return sum;
 }
-
 void fillDataArray(GLubyte data[]) {
 	double xyPeriod = 40.0;
 	double turbPower = 0.1;
@@ -104,7 +92,6 @@ void fillDataArray(GLubyte data[]) {
 		}
 	}
 }
-
 GLuint buildNoiseTexture() {
 	GLuint textureID;
 	GLubyte* data = new GLubyte[noiseHeight * noiseWidth * noiseDepth * 4];
@@ -117,7 +104,6 @@ GLuint buildNoiseTexture() {
 	delete[] data;
 	return textureID;
 }
-
 void generateNoise() {
 	for (int x = 0; x < noiseHeight; x++) {
 		for (int y = 0; y < noiseWidth; y++) {
@@ -127,7 +113,6 @@ void generateNoise() {
 		}
 	}
 }
-
 void installLights(glm::mat4 vMatrix) {
 	glm::vec3 transformed = glm::vec3(vMatrix * glm::vec4(currentLightPos, 1.0));
 	lightPos[0] = transformed.x;
@@ -152,7 +137,6 @@ void installLights(glm::mat4 vMatrix) {
 	glProgramUniform4fv(renderingProgram, mspecLoc, 1, matSpe);
 	glProgramUniform1f(renderingProgram, mshiLoc, matShi);
 }
-
 void setupVertices(void) {
 	numDolphinVertices = dolphinObj.getNumVertices();
 	std::vector<glm::vec3> vert = dolphinObj.getVertices();
@@ -161,7 +145,6 @@ void setupVertices(void) {
 	std::vector<float> pvalues;
 	std::vector<float> tvalues;
 	std::vector<float> nvalues;
-
 	for (int i = 0; i < numDolphinVertices; i++) {
 		pvalues.push_back((vert[i]).x);
 		pvalues.push_back((vert[i]).y);
@@ -172,21 +155,16 @@ void setupVertices(void) {
 		nvalues.push_back((norm[i]).y);
 		nvalues.push_back((norm[i]).z);
 	}
-
 	glGenVertexArrays(1, vao);
 	glBindVertexArray(vao[0]);
 	glGenBuffers(numVBOs, vbo);
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(GL_ARRAY_BUFFER, pvalues.size() * 4, &pvalues[0], GL_STATIC_DRAW);
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, tvalues.size() * 4, &tvalues[0], GL_STATIC_DRAW);
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
 	glBufferData(GL_ARRAY_BUFFER, nvalues.size() * 4, &nvalues[0], GL_STATIC_DRAW);
 }
-
 void init(GLFWwindow* window) {
 	renderingProgram = Utils::createShaderProgram("vertShader.glsl", "fragShader.glsl");
 	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 1.7f;
@@ -199,7 +177,6 @@ void init(GLFWwindow* window) {
 	noiseTexture = buildNoiseTexture();
 	texRot = glm::rotate(glm::mat4(1.0f), toRadians(20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
-
 void display(GLFWwindow* window, double currentTime) {
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -234,13 +211,11 @@ void display(GLFWwindow* window, double currentTime) {
 	glDepthFunc(GL_LEQUAL);
 	glDrawArrays(GL_TRIANGLES, 0, numDolphinVertices);
 }
-
 void window_size_callback(GLFWwindow* win, int newWidth, int newHeight) {
 	aspect = (float)newWidth / (float)newHeight;
 	glViewport(0, 0, newWidth, newHeight);
 	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
 }
-
 int main(void) {
 	if (!glfwInit()) { exit(EXIT_FAILURE); }
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);

@@ -4,11 +4,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Common.h"
-
 float toRadians(float degrees) { return (degrees * 2.0f * 3.14159f) / 360.0f; }
-
 #define numVAOs 1
-
 float cameraX, cameraY, cameraZ;
 float terLocX, terLocY, terLocZ;
 float lightLocX, lightLocY, lightLocZ;
@@ -23,7 +20,6 @@ glm::vec3 currentLightPos;
 float lightPos[3];
 float lightMovement = 0.1f;
 double prevTime = 0.0;
-
 float globalAmbient[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 float lightAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 float lightDiffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -33,7 +29,6 @@ float* matDif = Utils::silverDiffuse();
 float* matSpe = Utils::silverSpecular();
 float matShi = Utils::silverShininess();
 GLuint squareMoonTexture, squareMoonHeight, squareMoonNormals;
-
 void installLights(glm::mat4 vMatrix) {
     glm::vec3 transformed = glm::vec3(vMatrix * glm::vec4(currentLightPos, 1.0));
     lightPos[0] = transformed.x;
@@ -58,7 +53,6 @@ void installLights(glm::mat4 vMatrix) {
     glProgramUniform4fv(renderingProgram, mspecLoc, 1, matSpe);
     glProgramUniform1f(renderingProgram, mshiLoc, matShi);
 }
-
 void init(GLFWwindow* window) {
     renderingProgram = Utils::createShaderProgram("vertShader.glsl", "tessCShader.glsl", "tessEShader.glsl", "fragShader.glsl");
     cameraX = cameraY = 0.0f; cameraZ = 0.7f;
@@ -73,7 +67,6 @@ void init(GLFWwindow* window) {
     glGenVertexArrays(numVAOs, vao);
     glBindVertexArray(vao[0]);
 }
-
 void display(GLFWwindow* window, double currentTime) {
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     glUseProgram(renderingProgram);
@@ -110,13 +103,11 @@ void display(GLFWwindow* window, double currentTime) {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDrawArraysInstanced(GL_PATCHES, 0, 4, 64 * 64);
 }
-
 void window_size_callback(GLFWwindow* win, int newWidth, int newHeight) {
     aspect = (float)newWidth / (float)newHeight;
     glViewport(0, 0, newWidth, newHeight);
     pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
 }
-
 int main() {
     if (!glfwInit()) return EXIT_FAILURE;
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);

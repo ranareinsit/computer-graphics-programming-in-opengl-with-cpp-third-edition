@@ -1,14 +1,10 @@
 #version 430
-
 layout (vertices = 4) out;
-
 in vec2 tc[];
 out vec2 tcs_out[];
-
 uniform mat4 mvp_matrix;
 layout (binding=0) uniform sampler2D tex_color;
 layout (binding = 1) uniform sampler2D tex_height;
-
 void main(void) {
 	float subdivisions = 16.0;
 	if (gl_InvocationID == 0) {

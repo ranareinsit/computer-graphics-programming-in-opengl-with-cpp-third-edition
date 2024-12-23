@@ -9,10 +9,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "Common.h"
-
 constexpr int numVAOs = 1;
 constexpr int numVBOs = 2;
-
 float cameraX, cameraY, cameraZ;
 float pyrLocX, pyrLocY, pyrLocZ;
 GLuint renderingProgram, vao[numVAOs], vbo[numVBOs], brickTexture;
@@ -20,7 +18,6 @@ GLuint mvLoc, projLoc;
 int width, height;
 float aspect, rotAmt = 0.0f;
 glm::mat4 pMat, vMat, mMat, mvMat;
-
 std::vector<float> loadFromFile(const std::string& filename) {
 	std::ifstream file(filename);
 	if (!file.is_open()) throw std::runtime_error("Failed to open file: " + filename);
@@ -29,7 +26,6 @@ std::vector<float> loadFromFile(const std::string& filename) {
 	while (file >> value) data.push_back(value);
 	return data;
 }
-
 void setupVertices() {
 	auto positions = loadFromFile("positions.txt");
 	auto texCoords = loadFromFile("texCoords.txt");
@@ -41,7 +37,6 @@ void setupVertices() {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(float), texCoords.data(), GL_STATIC_DRAW);
 }
-
 void init(GLFWwindow* window) {
 	renderingProgram = Utils::createShaderProgram("vertShader.glsl", "fragShader.glsl");
 	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 4.0f;
@@ -52,7 +47,6 @@ void init(GLFWwindow* window) {
 	setupVertices();
 	brickTexture = Utils::loadTexture("brick1.jpg");
 }
-
 void display(GLFWwindow* window, double currentTime) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(renderingProgram);
@@ -84,13 +78,11 @@ void display(GLFWwindow* window, double currentTime) {
 	glDepthFunc(GL_LEQUAL);
 	glDrawArrays(GL_TRIANGLES, 0, 18);
 }
-
 void window_size_callback(GLFWwindow* win, int newWidth, int newHeight) {
 	aspect = (float)newWidth / newHeight;
 	glViewport(0, 0, newWidth, newHeight);
 	pMat = glm::perspective(glm::radians(60.0f), aspect, 0.1f, 1000.0f);
 }
-
 int main() {
 	if (!glfwInit()) exit(EXIT_FAILURE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);

@@ -12,34 +12,26 @@
 #include <SOIL2/soil2.h>
 #include <string>
 using namespace std;
-
 float toRadians(float degrees) { return (degrees * 2.0f * 3.14159f) / 360.0f; }
-
 #define numVAOs 1
 #define numVBOs 3
-
 float cameraX, cameraY, cameraZ;
 float objLocX, objLocY, objLocZ;
 GLuint renderingProgram;
 GLuint vao[numVAOs];
 GLuint vbo[numVBOs];
-
 Sphere sphere(128);
 int numSphereVertices;
-
 GLuint noiseTexture, earthTexture;
 const int noiseHeight = 128;
 const int noiseWidth = 128;
 const int noiseDepth = 128;
 double noise[noiseHeight][noiseWidth][noiseDepth];
-
 GLuint mvLoc, projLoc, tLoc;
 int width, height;
 float aspect;
 glm::mat4 pMat, vMat, mMat, mvMat;
-
 float threshold = -0.2f;
-
 void fillDataArray(GLubyte data[]) {
 	for (int i = 0; i < noiseHeight; i++) {
 		for (int j = 0; j < noiseWidth; j++) {
@@ -52,7 +44,6 @@ void fillDataArray(GLubyte data[]) {
 		}
 	}
 }
-
 GLuint buildNoiseTexture() {
 	GLuint textureID;
 	GLubyte* data = new GLubyte[noiseHeight * noiseWidth * noiseDepth * 4];
@@ -65,7 +56,6 @@ GLuint buildNoiseTexture() {
 	delete[] data;
 	return textureID;
 }
-
 void generateNoise() {
 	for (int x = 0; x < noiseHeight; x++) {
 		for (int y = 0; y < noiseWidth; y++) {
@@ -75,7 +65,6 @@ void generateNoise() {
 		}
 	}
 }
-
 void setupVertices(void) {
 	std::vector<int> ind = sphere.getIndices();
 	std::vector<glm::vec3> vert = sphere.getVertices();
@@ -95,21 +84,16 @@ void setupVertices(void) {
 		nvalues.push_back((norm[ind[i]]).y);
 		nvalues.push_back((norm[ind[i]]).z);
 	}
-
 	glGenVertexArrays(1, vao);
 	glBindVertexArray(vao[0]);
 	glGenBuffers(numVBOs, vbo);
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(GL_ARRAY_BUFFER, pvalues.size() * 4, &pvalues[0], GL_STATIC_DRAW);
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, tvalues.size() * 4, &tvalues[0], GL_STATIC_DRAW);
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
 	glBufferData(GL_ARRAY_BUFFER, nvalues.size() * 4, &nvalues[0], GL_STATIC_DRAW);
 }
-
 void init(GLFWwindow* window) {
 	renderingProgram = Utils::createShaderProgram("vertShader.glsl", "fragShader.glsl");
 	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 3.0f;
@@ -122,7 +106,6 @@ void init(GLFWwindow* window) {
 	noiseTexture = buildNoiseTexture();
 	earthTexture = Utils::loadTexture("world.jpg");
 }
-
 void display(GLFWwindow* window, double currentTime) {
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -155,13 +138,11 @@ void display(GLFWwindow* window, double currentTime) {
 	glDepthFunc(GL_LEQUAL);
 	glDrawArrays(GL_TRIANGLES, 0, numSphereVertices);
 }
-
 void window_size_callback(GLFWwindow* win, int newWidth, int newHeight) {
 	aspect = (float)newWidth / (float)newHeight;
 	glViewport(0, 0, newWidth, newHeight);
 	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
 }
-
 int main(void) {
 	if (!glfwInit()) { exit(EXIT_FAILURE); }
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);

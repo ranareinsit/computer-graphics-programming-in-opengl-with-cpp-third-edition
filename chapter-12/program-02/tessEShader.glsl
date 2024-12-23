@@ -1,13 +1,9 @@
 #version 430
-
 layout (quads, equal_spacing,ccw) in;
-
 uniform mat4 mvp_matrix;
 layout (binding = 0) uniform sampler2D tex_color;
-
 in vec2 tcs_out[];
 out vec2 tes_out;
-
 void main (void) {
 	vec3 p00 = (gl_in[0].gl_Position).xyz;
 	vec3 p10 = (gl_in[1].gl_Position).xyz;
@@ -40,8 +36,7 @@ void main (void) {
 		  bu1 * ( bv0*p10 + bv1*p11 + bv2*p12 + bv3*p13 ) +
 		  bu2 * ( bv0*p20 + bv1*p21 + bv2*p22 + bv3*p23 ) +
 		  bu3 * ( bv0*p30 + bv1*p31 + bv2*p32 + bv3*p33 );
-	gl_Position = mvp_matrix * vec4(outputPosition,1.0f);   
-//	gl_Position = mvp_matrix * vec4(u,0,v,1);               
+	gl_Position = mvp_matrix * vec4(outputPosition,1.0f);  
 	
 	vec2 tc1 = mix(tcs_out[0], tcs_out[3], gl_TessCoord.x);
 	vec2 tc2 = mix(tcs_out[12], tcs_out[15], gl_TessCoord.x);

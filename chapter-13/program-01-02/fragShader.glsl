@@ -1,11 +1,8 @@
 #version 430
-
 in vec3 varyingNormalG;
 in vec3 varyingLightDirG;
 in vec3 varyingHalfVectorG;
- 
 out vec4 fragColor;
-
 struct PositionalLight {
 	vec4 ambient;
 	vec4 diffuse;
@@ -18,14 +15,12 @@ struct Material {
 	vec4 specular;
 	float shininess;
 };
-
 uniform vec4 globalAmbient;
 uniform PositionalLight light;
 uniform Material material;
 uniform mat4 mv_matrix;
 uniform mat4 proj_matrix;
 uniform mat4 norm_matrix;
-
 void main(void) {
 	vec3 L = normalize(varyingLightDirG);
 	vec3 N = normalize(varyingNormalG);

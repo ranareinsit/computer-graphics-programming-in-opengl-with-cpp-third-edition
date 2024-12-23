@@ -1,5 +1,4 @@
 #define GLM_ENABLE_EXPERIMENTAL
-
 #include "Common.h"
 #include <cmath>
 #include <fstream>
@@ -13,9 +12,7 @@
 #include <SOIL2/soil2.h>
 #include <string>
 using namespace std;
-
 Utils::Utils() {}
-
 void Utils::displayComputeShaderLimits() {
 	int work_grp_cnt[3];
 	int work_grp_siz[3];
@@ -31,7 +28,6 @@ void Utils::displayComputeShaderLimits() {
 	printf("maximum size of workgroups is: %i  %i  %i\n", work_grp_siz[0], work_grp_siz[1], work_grp_siz[2]);
 	printf("max local work group invocations %i\n", work_grp_inv);
 }
-
 string Utils::readShaderFile(const char* filePath) {
 	string content;
 	ifstream fileStream(filePath, ios::in);
@@ -44,7 +40,6 @@ string Utils::readShaderFile(const char* filePath) {
 	fileStream.close();
 	return content;
 }
-
 bool Utils::checkOpenGLError() {
 	bool foundError = false;
 	int glErr = glGetError();
@@ -55,7 +50,6 @@ bool Utils::checkOpenGLError() {
 	}
 	return foundError;
 }
-
 void Utils::printShaderLog(GLuint shader) {
 	int len = 0;
 	int chWrittn = 0;
@@ -68,22 +62,18 @@ void Utils::printShaderLog(GLuint shader) {
 		free(log);
 	}
 }
-
 GLuint Utils::prepareShader(int shaderTYPE, const char* shaderPath) {
 	GLint shaderCompiled;
 	string shaderStr = readShaderFile(shaderPath);
 	const char* shaderSrc = shaderStr.c_str();
 	GLuint shaderRef = glCreateShader(shaderTYPE);
-
 	if (shaderRef == 0 || shaderRef == GL_INVALID_ENUM) {
 		printf("Error: Could not create shader \"%s\" of type:%d\n", shaderPath, shaderTYPE);
 		return 0;
 	}
-
 	glShaderSource(shaderRef, 1, &shaderSrc, NULL);
 	glCompileShader(shaderRef);
 	checkOpenGLError();
-
 	glGetShaderiv(shaderRef, GL_COMPILE_STATUS, &shaderCompiled);
 	if (shaderCompiled != GL_TRUE) {
 		if (shaderTYPE == GL_VERTEX_SHADER) cout << "Vertex ";
@@ -97,7 +87,6 @@ GLuint Utils::prepareShader(int shaderTYPE, const char* shaderPath) {
 	}
 	return shaderRef;
 }
-
 void Utils::printProgramLog(int prog) {
 	int len = 0;
 	int chWrittn = 0;
@@ -110,7 +99,6 @@ void Utils::printProgramLog(int prog) {
 		free(log);
 	}
 }
-
 int Utils::finalizeShaderProgram(GLuint sprogram) {
 	GLint linked;
 	glLinkProgram(sprogram);
@@ -122,7 +110,6 @@ int Utils::finalizeShaderProgram(GLuint sprogram) {
 	}
 	return sprogram;
 }
-
 GLuint Utils::createShaderProgram(const char* cp) {
 	GLuint cShader = prepareShader(GL_COMPUTE_SHADER, cp);
 	GLuint cprogram = glCreateProgram();
@@ -130,7 +117,6 @@ GLuint Utils::createShaderProgram(const char* cp) {
 	finalizeShaderProgram(cprogram);
 	return cprogram;
 }
-
 GLuint Utils::createShaderProgram(const char* vp, const char* fp) {
 	GLuint vShader = prepareShader(GL_VERTEX_SHADER, vp);
 	GLuint fShader = prepareShader(GL_FRAGMENT_SHADER, fp);
@@ -140,7 +126,6 @@ GLuint Utils::createShaderProgram(const char* vp, const char* fp) {
 	finalizeShaderProgram(vfprogram);
 	return vfprogram;
 }
-
 GLuint Utils::createShaderProgram(const char* vp, const char* gp, const char* fp) {
 	GLuint vShader = prepareShader(GL_VERTEX_SHADER, vp);
 	GLuint gShader = prepareShader(GL_GEOMETRY_SHADER, gp);
@@ -152,7 +137,6 @@ GLuint Utils::createShaderProgram(const char* vp, const char* gp, const char* fp
 	finalizeShaderProgram(vgfprogram);
 	return vgfprogram;
 }
-
 GLuint Utils::createShaderProgram(const char* vp, const char* tCS, const char* tES, const char* fp) {
 	GLuint vShader = prepareShader(GL_VERTEX_SHADER, vp);
 	GLuint tcShader = prepareShader(GL_TESS_CONTROL_SHADER, tCS);
@@ -166,7 +150,6 @@ GLuint Utils::createShaderProgram(const char* vp, const char* tCS, const char* t
 	finalizeShaderProgram(vtfprogram);
 	return vtfprogram;
 }
-
 GLuint Utils::createShaderProgram(const char* vp, const char* tCS, const char* tES, char* gp, const char* fp) {
 	GLuint vShader = prepareShader(GL_VERTEX_SHADER, vp);
 	GLuint tcShader = prepareShader(GL_TESS_CONTROL_SHADER, tCS);
@@ -182,7 +165,6 @@ GLuint Utils::createShaderProgram(const char* vp, const char* tCS, const char* t
 	finalizeShaderProgram(vtgfprogram);
 	return vtgfprogram;
 }
-
 GLuint Utils::loadCubeMap(const char* mapDir) {
 	GLuint textureRef;
 	string xp = mapDir; xp = xp + "/xp.jpg";
@@ -202,7 +184,6 @@ GLuint Utils::loadCubeMap(const char* mapDir) {
 	if (textureRef == 0) cout << "didnt find cube map image file" << endl;
 	return textureRef;
 }
-
 GLuint Utils::loadTexture(const char* texImagePath) {
 	GLuint textureRef;
 	textureRef = SOIL_load_OGL_texture(texImagePath, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
@@ -217,17 +198,14 @@ GLuint Utils::loadTexture(const char* texImagePath) {
 	}
 	return textureRef;
 }
-
 float* Utils::goldAmbient() { static float a[4] = { 0.2473f, 0.1995f, 0.0745f, 1 }; return (float*)a; }
 float* Utils::goldDiffuse() { static float a[4] = { 0.7516f, 0.6065f, 0.2265f, 1 }; return (float*)a; }
 float* Utils::goldSpecular() { static float a[4] = { 0.6283f, 0.5559f, 0.3661f, 1 }; return (float*)a; }
 float Utils::goldShininess() { return 51.2f; }
-
 float* Utils::silverAmbient() { static float a[4] = { 0.1923f, 0.1923f, 0.1923f, 1 }; return (float*)a; }
 float* Utils::silverDiffuse() { static float a[4] = { 0.5075f, 0.5075f, 0.5075f, 1 }; return (float*)a; }
 float* Utils::silverSpecular() { static float a[4] = { 0.5083f, 0.5083f, 0.5083f, 1 }; return (float*)a; }
 float Utils::silverShininess() { return 51.2f; }
-
 float* Utils::bronzeAmbient() { static float a[4] = { 0.2125f, 0.1275f, 0.0540f, 1 }; return (float*)a; }
 float* Utils::bronzeDiffuse() { static float a[4] = { 0.7140f, 0.4284f, 0.1814f, 1 }; return (float*)a; }
 float* Utils::bronzeSpecular() { static float a[4] = { 0.3936f, 0.2719f, 0.1667f, 1 }; return (float*)a; }

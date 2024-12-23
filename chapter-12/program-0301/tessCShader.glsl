@@ -1,12 +1,9 @@
 #version 430
-
 layout (vertices = 4) out;
 in vec2 tc[];
 out vec2 tcs_out[];
-
 uniform mat4 mvp_matrix;
 layout (binding=0) uniform sampler2D tex_color;
-
 void main(void) {
 	int TL = 32;
 	if (gl_InvocationID == 0) {

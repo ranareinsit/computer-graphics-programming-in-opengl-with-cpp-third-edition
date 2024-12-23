@@ -1,8 +1,7 @@
 #include <cmath>
 #include <vector>
 #include <glm/glm.hpp>
-class HalfSphere
-{
+class HalfSphere {
 private:
 	int numVertices;
 	int numIndices;
@@ -12,7 +11,6 @@ private:
 	std::vector<glm::vec3> normals;
 	void init(int);
 	float toRadians(float degrees);
-
 public:
 	HalfSphere();
 	HalfSphere(int prec);

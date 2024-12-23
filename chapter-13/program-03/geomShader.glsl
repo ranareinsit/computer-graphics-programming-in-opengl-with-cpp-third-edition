@@ -1,15 +1,10 @@
 #version 430
-
 layout (triangles) in;
-
 in vec3 varyingOriginalNormal[];
-
 out vec3 varyingNormal;
 out vec3 varyingLightDir;
 out vec3 varyingVertPos;
-
 layout (triangle_strip, max_vertices=9) out;
-
 struct PositionalLight {
 	vec4 ambient;
 	vec4 diffuse;
@@ -22,24 +17,20 @@ struct Material {
 	vec4 specular;  
 	float shininess;
 };
-
 uniform vec4 globalAmbient;
 uniform PositionalLight light;
 uniform Material material;
 uniform mat4 mv_matrix;
 uniform mat4 proj_matrix;
 uniform mat4 norm_matrix;
-
 vec3 newPoints[9], lightDir[9];
 float sLen = 0.005;
-
 void setOutputValues(int p, vec3 norm) {
 	varyingNormal = norm;
 	varyingLightDir = lightDir[p];
 	varyingVertPos = newPoints[p];
 	gl_Position = proj_matrix * vec4(newPoints[p], 1.0);
 }
-
 void makeNewTriangle(int p1, int p2) {
 	vec3 c1 = normalize(newPoints[p1] - newPoints[3]);
 	vec3 c2 = normalize(newPoints[p2] - newPoints[3]);
@@ -49,7 +40,6 @@ void makeNewTriangle(int p1, int p2) {
 	setOutputValues(3, norm); EmitVertex();
 	EndPrimitive();
 }
-
 void main(void) {
 	vec3 sp0 = gl_in[0].gl_Position.xyz + varyingOriginalNormal[0]*sLen;
 	vec3 sp1 = gl_in[1].gl_Position.xyz + varyingOriginalNormal[1]*sLen;

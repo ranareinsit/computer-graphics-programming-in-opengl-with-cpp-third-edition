@@ -4,12 +4,9 @@
 #include <array>
 #include <cstdlib>
 using namespace std;
-
 #define numVAOs 1
-
 GLuint renderingProgram;
 GLuint vao[numVAOs];
-
 static GLuint createShaderProgram() {
 	const char* vshaderSource =
 		"#version 430 \n"
@@ -20,7 +17,6 @@ static GLuint createShaderProgram() {
 		"out vec4 color; \n"
 		"uniform vec3 boxColor; \n"
 		"void main(void) {  if (gl_FragCoord.x < 295) color = vec4(boxColor, 1.0); else color = vec4(0.0, 0.0, 1.0, 1.0);  }";
-
 	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
 	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(vShader, 1, &vshaderSource, NULL);
@@ -33,19 +29,15 @@ static GLuint createShaderProgram() {
 	glLinkProgram(vfProgram);
 	return vfProgram;
 }
-
 static float lerp(float firstFloat, float secondFloat, float by) {
 	return firstFloat * (1 - by) + secondFloat * by;
 }
-
 static float clamp(float value, float min, float max) {
 	return value < min ? min : value > max ? max : value;
 }
-
 static float random() {
 	return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 }
-
 int main() {
 	if (!glfwInit()) return -1;
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -56,18 +48,14 @@ int main() {
 	renderingProgram = createShaderProgram();
 	glGenVertexArrays(numVAOs, vao);
 	glBindVertexArray(vao[0]);
-
 	array<float, 3> rgb_array = { 0.0f, 0.0f, 0.0f };
 	array<int, 3> color_vector = { 1, 1, 1 };
 	array<float, 3> color_delta = { 0.0001f, 0.0001f, 0.0001f };
-
 	float max = 1.0f;
 	float min = 0.0f;
 	float fact = 0.0001f;
-
 	while (!glfwWindowShouldClose(window)) {
 		double currentTime = glfwGetTime();
-		//
 		for (size_t i = 0; i < rgb_array.size(); i++) {
 			if (rgb_array[i] >= max || rgb_array[i] <= min) {
 				color_vector[i] = -color_vector[i];
@@ -75,10 +63,8 @@ int main() {
 			}
 			rgb_array[i] = clamp(rgb_array[i] + (color_delta[i] * color_vector[i]), min, max);
 		}
-		//
 		glClearColor(rgb_array[0], rgb_array[1], rgb_array[2], 1.0);
 		glClear(GL_COLOR_BUFFER_BIT);
-		//
 		glUseProgram(renderingProgram);
 		GLuint colorLoc = glGetUniformLocation(renderingProgram, "boxColor");
 		glUniform3f(colorLoc, 1.0f - rgb_array[0], 1.0f - rgb_array[1], 1.0f - rgb_array[2]);

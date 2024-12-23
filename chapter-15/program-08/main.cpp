@@ -14,12 +14,9 @@
 #include <random>
 #define PI 3.1415926535
 using namespace std;
-
 #define numVAOs 1
 #define numVBOs 4
-
 float toRadians(float degrees) { return (degrees * 2.0f * PI) / 360.0f; }
-
 Utils util = Utils();
 float cameraHeight = -2.0f, cameraPitch = 15.0f, cameraDelta = 0.01f;
 float surfacePlaneHeight = 0.0f;
@@ -27,43 +24,35 @@ float floorPlaneHeight = -10.0f;
 GLuint renderingProgramSURFACE, renderingProgramFLOOR, renderingProgramCubeMap;
 GLuint vao[numVAOs];
 GLuint vbo[numVBOs];
-
 GLuint vLoc, mvLoc, projLoc, nLoc;
 int width, height;
 float aspect;
 glm::mat4 pMat, vMat, mMat, mvMat, invTrMat;
 GLuint skyboxTexture, noiseTexture;
-
 glm::vec3 lightLoc = glm::vec3(0.0f, 4.0f, -8.0f);
 GLuint globalAmbLoc, ambLoc, diffLoc, specLoc, posLoc, mambLoc, mdiffLoc, mspecLoc, mshiLoc, aboveLoc;
 glm::vec3 currentLightPos, transformed;
 float lightPos[3];
-
 float globalAmbient[4] = { 0.7f, 0.7f, 0.7f, 1.0f };
 float lightAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 float lightDiffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 float lightSpecular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
 float matAmb[4] = { 0.5f, 0.6f, 0.8f, 1.0f };
 float matDif[4] = { 0.8f, 0.9f, 1.0f, 1.0f };
 float matSpe[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 float matShi = 100.0f;
-
 GLuint refractTextureId;
 GLuint reflectTextureId;
 GLuint refractFrameBuffer;
 GLuint reflectFrameBuffer;
-
 GLuint skyTexture;
 const int noiseHeight = 256;
 const int noiseWidth = 256;
 const int noiseDepth = 256;
 double noise[noiseHeight][noiseWidth][noiseDepth];
-
 float depthLookup = 0.0f;
 GLuint dOffsetLoc;
 double prevTime;
-
 double smoothNoise(double zoom, double x1, double y1, double z1) {
 	double fractX = x1 - (int)x1;
 	double fractY = y1 - (int)y1;
@@ -82,7 +71,6 @@ double smoothNoise(double zoom, double x1, double y1, double z1) {
 	value += (1.0 - fractX) * (1.0 - fractY) * (1.0 - fractZ) * noise[(int)x2][(int)y2][(int)z2];
 	return value;
 }
-
 double turbulence(double x, double y, double z, double maxZoom) {
 	double sum = 0.0, zoom = maxZoom;
 	sum = (sin((1.0 / 512.0) * (8 * PI) * (x + z - 4 * y)) + 1) * 8.0;
@@ -93,7 +81,6 @@ double turbulence(double x, double y, double z, double maxZoom) {
 	sum = 128.0 * sum / maxZoom;
 	return sum;
 }
-
 void fillDataArray(GLubyte data[]) {
 	double maxZoom = 32.0;
 	for (int i = 0; i < noiseHeight; i++) {
@@ -107,7 +94,6 @@ void fillDataArray(GLubyte data[]) {
 		}
 	}
 }
-
 GLuint buildNoiseTexture() {
 	GLuint textureID;
 	GLubyte* data = new GLubyte[noiseHeight * noiseWidth * noiseDepth * 4];
@@ -120,7 +106,6 @@ GLuint buildNoiseTexture() {
 	delete[] data;
 	return textureID;
 }
-
 void generateNoise() {
 	for (int x = 0; x < noiseHeight; x++) {
 		for (int y = 0; y < noiseWidth; y++) {
@@ -130,7 +115,6 @@ void generateNoise() {
 		}
 	}
 }
-
 void installLights(glm::mat4 vMatrix, GLuint renderingProgram) {
 	transformed = glm::vec3(vMatrix * glm::vec4(currentLightPos, 1.0));
 	lightPos[0] = transformed.x;
@@ -155,7 +139,6 @@ void installLights(glm::mat4 vMatrix, GLuint renderingProgram) {
 	glProgramUniform4fv(renderingProgram, mspecLoc, 1, matSpe);
 	glProgramUniform1f(renderingProgram, mshiLoc, matShi);
 }
-
 void setupVertices(void) {
 	float cubeVertexPositions[108] = {
 		-1.0f,  1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f,
@@ -195,7 +178,6 @@ void setupVertices(void) {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[3]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(PLANE_NORMALS), PLANE_NORMALS, GL_STATIC_DRAW);
 }
-
 void createReflectRefractBuffers(GLFWwindow* window) {
 	GLuint bufferId[1];
 	glGenBuffers(1, bufferId);
@@ -235,7 +217,6 @@ void createReflectRefractBuffers(GLFWwindow* window) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, bufferId[0], 0);
 }
-
 void init(GLFWwindow* window) {
 	renderingProgramSURFACE = Utils::createShaderProgram("vertShaderSURFACE.glsl", "fragShaderSURFACE.glsl");
 	renderingProgramFLOOR = Utils::createShaderProgram("vertShaderFLOOR.glsl", "fragShaderFLOOR.glsl");
@@ -249,7 +230,6 @@ void init(GLFWwindow* window) {
 	noiseTexture = buildNoiseTexture();
 	prevTime = glfwGetTime();
 }
-
 void prepForSkyBoxRender() {
 	glUseProgram(renderingProgramCubeMap);
 	vLoc = glGetUniformLocation(renderingProgramCubeMap, "v_matrix");
@@ -257,15 +237,13 @@ void prepForSkyBoxRender() {
 	aboveLoc = glGetUniformLocation(renderingProgramCubeMap, "isAbove");
 	glUniformMatrix4fv(vLoc, 1, GL_FALSE, glm::value_ptr(vMat));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
-	if (cameraHeight >= surfacePlaneHeight) { glUniform1i(aboveLoc, 1); }
-	else { glUniform1i(aboveLoc, 0); }
+	if (cameraHeight >= surfacePlaneHeight) { glUniform1i(aboveLoc, 1); } else { glUniform1i(aboveLoc, 0); }
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTexture);
 }
-
 void prepForTopSurfaceRender() {
 	glUseProgram(renderingProgramSURFACE);
 	mvLoc = glGetUniformLocation(renderingProgramSURFACE, "mv_matrix");
@@ -282,8 +260,7 @@ void prepForTopSurfaceRender() {
 	glUniformMatrix4fv(nLoc, 1, GL_FALSE, glm::value_ptr(invTrMat));
 	if (cameraHeight >= surfacePlaneHeight) {
 		glUniform1i(aboveLoc, 1);
-	}
-	else {
+	} else {
 		glUniform1i(aboveLoc, 0);
 	}
 	dOffsetLoc = glGetUniformLocation(renderingProgramSURFACE, "depthOffset");
@@ -304,7 +281,6 @@ void prepForTopSurfaceRender() {
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_3D, noiseTexture);
 }
-
 void prepForFloorRender() {
 	glUseProgram(renderingProgramFLOOR);
 	mvLoc = glGetUniformLocation(renderingProgramFLOOR, "mv_matrix");
@@ -321,8 +297,7 @@ void prepForFloorRender() {
 	glUniformMatrix4fv(nLoc, 1, GL_FALSE, glm::value_ptr(invTrMat));
 	if (cameraHeight >= surfacePlaneHeight) {
 		glUniform1i(aboveLoc, 1);
-	}
-	else {
+	} else {
 		glUniform1i(aboveLoc, 0);
 	}
 	dOffsetLoc = glGetUniformLocation(renderingProgramFLOOR, "depthOffset");
@@ -339,10 +314,8 @@ void prepForFloorRender() {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_3D, noiseTexture);
 }
-
 void display(GLFWwindow* window, double currentTime) {
 	cameraHeight += cameraDelta;
-
 	if (cameraHeight < -2.0f || cameraHeight > 2.0f) {
 		cameraDelta = -cameraDelta;
 	}
@@ -355,7 +328,6 @@ void display(GLFWwindow* window, double currentTime) {
 		vMat =
 			glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -(surfacePlaneHeight - cameraHeight), 0.0f)) *
 			glm::rotate(glm::mat4(1.0f), toRadians(-cameraPitch), glm::vec3(1.0f, 0.0f, 0.0f));
-
 		glBindFramebuffer(GL_FRAMEBUFFER, reflectFrameBuffer);
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -366,22 +338,18 @@ void display(GLFWwindow* window, double currentTime) {
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glEnable(GL_DEPTH_TEST);
 	}
-
 	vMat =
 		glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -(-(surfacePlaneHeight - cameraHeight)), 0.0f)) *
 		glm::rotate(glm::mat4(1.0f), toRadians(cameraPitch), glm::vec3(1.0f, 0.0f, 0.0f));
-
 	glBindFramebuffer(GL_FRAMEBUFFER, refractFrameBuffer);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT);
-
 	if (cameraHeight >= surfacePlaneHeight) {
 		prepForFloorRender();
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-	}
-	else {
+	} else {
 		prepForSkyBoxRender();
 		glEnable(GL_CULL_FACE);
 		glFrontFace(GL_CCW);
@@ -412,7 +380,6 @@ void display(GLFWwindow* window, double currentTime) {
 	glFrontFace(GL_CCW);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
-
 int main(void) {
 	if (!glfwInit()) { exit(EXIT_FAILURE); }
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);

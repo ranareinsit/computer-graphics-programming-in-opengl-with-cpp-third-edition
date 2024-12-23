@@ -5,7 +5,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-
 class ImportedModel {
 	private:
 		int numVertices;
@@ -20,7 +19,6 @@ class ImportedModel {
 		std::vector<glm::vec2> getTextureCoords();
 		std::vector<glm::vec3> getNormals();
 };
-
 class ModelImporter {
 	private:
 		std::vector<float> vertVals;

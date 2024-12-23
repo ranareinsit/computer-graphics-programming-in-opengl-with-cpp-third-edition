@@ -10,47 +10,36 @@
 #include <SOIL2/soil2.h>
 #include <string>
 using namespace std;
-
 float toRadians(float degrees) { return (degrees * 2.0f * 3.14159f) / 360.0f; }
-
 #define numVAOs 1
 #define numVBOs 6
-
 GLuint renderingProgram;
 GLuint vao[numVAOs];
 GLuint vbo[numVBOs];
-
 ImportedModel pyramid("pyr.obj");
 Torus myTorus(0.8f, 0.6f, 48);
 int numPyramidVertices, numTorusVertices, numTorusIndices;
-
 glm::vec3 torusLoc(1.2f, 0.5f, -3.0f);
 glm::vec3 pyrLoc(-0.1f, 0.3f, 0.3f);
 glm::vec3 cameraLoc(0.0f, 0.3f, 4.0f);
 glm::vec3 lightLoc(0.0f, 2.3f, 4.0f);
-
 float pyrXrot = 40.0f;
 float pyrYrot = 95.0f;
 float torXrot = 35.0f;
-
 float globalAmbient[4] = { 0.7f, 0.7f, 0.7f, 1.0f };
 float lightAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 float lightDiffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 float lightSpecular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
 float* GmatAmb = Utils::goldAmbient();
 float* GmatDif = Utils::goldDiffuse();
 float* GmatSpe = Utils::goldSpecular();
 float GmatShi = Utils::goldShininess();
-
 float* BmatAmb = Utils::bronzeAmbient();
 float* BmatDif = Utils::bronzeDiffuse();
 float* BmatSpe = Utils::bronzeSpecular();
 float BmatShi = Utils::bronzeShininess();
-
 float thisAmb[4], thisDif[4], thisSpe[4], matAmb[4], matDif[4], matSpe[4];
 float thisShi, matShi;
-
 GLuint mvLoc, projLoc, nLoc, aLoc, fLoc;
 GLuint globalAmbLoc, ambLoc, diffLoc, specLoc, posLoc, mambLoc, mdiffLoc, mspecLoc, mshiLoc;
 int width, height;
@@ -58,18 +47,15 @@ float aspect;
 glm::mat4 pMat, vMat, mMat, mvMat, invTrMat;
 glm::vec3 currentLightPos, transformed;
 float lightPos[3];
-
 void installLights(int renderingProgram, glm::mat4 vMatrix) {
 	transformed = glm::vec3(vMatrix * glm::vec4(currentLightPos, 1.0));
 	lightPos[0] = transformed.x;
 	lightPos[1] = transformed.y;
 	lightPos[2] = transformed.z;
-
 	matAmb[0] = thisAmb[0]; matAmb[1] = thisAmb[1]; matAmb[2] = thisAmb[2]; matAmb[3] = thisAmb[3];
 	matDif[0] = thisDif[0]; matDif[1] = thisDif[1]; matDif[2] = thisDif[2]; matDif[3] = thisDif[3];
 	matSpe[0] = thisSpe[0]; matSpe[1] = thisSpe[1]; matSpe[2] = thisSpe[2]; matSpe[3] = thisSpe[3];
 	matShi = thisShi;
-
 	globalAmbLoc = glGetUniformLocation(renderingProgram, "globalAmbient");
 	ambLoc = glGetUniformLocation(renderingProgram, "light.ambient");
 	diffLoc = glGetUniformLocation(renderingProgram, "light.diffuse");
@@ -79,7 +65,6 @@ void installLights(int renderingProgram, glm::mat4 vMatrix) {
 	mdiffLoc = glGetUniformLocation(renderingProgram, "material.diffuse");
 	mspecLoc = glGetUniformLocation(renderingProgram, "material.specular");
 	mshiLoc = glGetUniformLocation(renderingProgram, "material.shininess");
-
 	glProgramUniform4fv(renderingProgram, globalAmbLoc, 1, globalAmbient);
 	glProgramUniform4fv(renderingProgram, ambLoc, 1, lightAmbient);
 	glProgramUniform4fv(renderingProgram, diffLoc, 1, lightDiffuse);
@@ -90,7 +75,6 @@ void installLights(int renderingProgram, glm::mat4 vMatrix) {
 	glProgramUniform4fv(renderingProgram, mspecLoc, 1, matSpe);
 	glProgramUniform1f(renderingProgram, mshiLoc, matShi);
 }
-
 void setupVertices(void) {
 	numPyramidVertices = pyramid.getNumVertices();
 	std::vector<glm::vec3> vert = pyramid.getVertices();
@@ -110,10 +94,8 @@ void setupVertices(void) {
 	std::vector<int> ind = myTorus.getIndices();
 	vert = myTorus.getVertices();
 	norm = myTorus.getNormals();
-
 	std::vector<float> torusPvalues;
 	std::vector<float> torusNvalues;
-
 	for (int i = 0; i < numTorusVertices; i++) {
 		torusPvalues.push_back(vert[i].x);
 		torusPvalues.push_back(vert[i].y);
@@ -122,27 +104,20 @@ void setupVertices(void) {
 		torusNvalues.push_back(norm[i].y);
 		torusNvalues.push_back(norm[i].z);
 	}
-
 	glGenVertexArrays(1, vao);
 	glBindVertexArray(vao[0]);
 	glGenBuffers(numVBOs, vbo);
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(GL_ARRAY_BUFFER, torusPvalues.size() * 4, &torusPvalues[0], GL_STATIC_DRAW);
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, pyramidPvalues.size() * 4, &pyramidPvalues[0], GL_STATIC_DRAW);
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
 	glBufferData(GL_ARRAY_BUFFER, torusNvalues.size() * 4, &torusNvalues[0], GL_STATIC_DRAW);
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[3]);
 	glBufferData(GL_ARRAY_BUFFER, pyramidNvalues.size() * 4, &pyramidNvalues[0], GL_STATIC_DRAW);
-
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[4]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, ind.size() * 4, &ind[0], GL_STATIC_DRAW);
 }
-
 void init(GLFWwindow* window) {
 	renderingProgram = Utils::createShaderProgram("./vertShader.glsl", "./fragShader.glsl");
 	glfwGetFramebufferSize(window, &width, &height);
@@ -150,7 +125,6 @@ void init(GLFWwindow* window) {
 	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
 	setupVertices();
 }
-
 void display(GLFWwindow* window, double currentTime) {
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
@@ -226,13 +200,11 @@ void display(GLFWwindow* window, double currentTime) {
 	glDrawArrays(GL_TRIANGLES, 0, numPyramidVertices);
 	glDisable(GL_BLEND);
 }
-
 void window_size_callback(GLFWwindow* win, int newWidth, int newHeight) {
 	aspect = (float)newWidth / (float)newHeight;
 	glViewport(0, 0, newWidth, newHeight);
 	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
 }
-
 int main(void) {
 	if (!glfwInit()) { exit(EXIT_FAILURE); }
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);

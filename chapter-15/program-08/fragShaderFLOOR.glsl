@@ -1,27 +1,22 @@
 #version 430
-
 in vec3 varyingNormal;
 in vec3 varyingLightDir;
 in vec3 varyingVertPos;
 in vec2 tc;
 out vec4 color;
-
 layout (binding=0) uniform sampler3D noiseTex;
-
 struct PositionalLight {
 	vec4 ambient;  
 	vec4 diffuse;  
 	vec4 specular;  
 	vec3 position;
 };
-
 struct Material {
 	vec4 ambient;  
 	vec4 diffuse;  
 	vec4 specular;  
 	float shininess;
 };
-
 uniform vec4 globalAmbient;
 uniform PositionalLight light;
 uniform Material material;
@@ -30,7 +25,6 @@ uniform mat4 proj_matrix;
 uniform mat4 norm_matrix;
 uniform int isAbove;
 uniform float depthOffset;
-
 vec3 estimateWaveNormal(float offset, float mapScale, float hScale) {
 	float h1 = (texture(noiseTex, vec3(((tc.s)    )*mapScale, depthOffset, ((tc.t)+offset)*mapScale))).r * hScale;
 	float h2 = (texture(noiseTex, vec3(((tc.s)-offset)*mapScale, depthOffset, ((tc.t)-offset)*mapScale))).r * hScale;
@@ -43,7 +37,6 @@ vec3 estimateWaveNormal(float offset, float mapScale, float hScale) {
 	vec3 normEst = normalize(cross(v4,v5));
 	return normEst;
 }
-
 vec3 checkerboard(vec2 tc) {
 	vec3 estNcb = estimateWaveNormal(.05, 32.0, 0.05);
 	float distortStrength = 0.1;
@@ -53,7 +46,6 @@ vec3 checkerboard(vec2 tc) {
 	float tile = mod(floor(distorted.x * tileScale) + floor(distorted.y * tileScale), 2.0);
 	return tile * vec3(1,1,1);
 }
-
 float getCausticValue(float x, float y, float z) {
 	float w = 8;
 	float strength = 4.0;
@@ -61,7 +53,6 @@ float getCausticValue(float x, float y, float z) {
 	float noise = texture(noiseTex, vec3(x*w,  y, z*w)).r;
 	return pow((1.0-abs(sin(noise*2*PI))), strength);
 }
-
 void main(void) {
 	vec4 fogColor = vec4(0.0, 0.0, 0.2, 1.0);
 	float fogStart = 10.0;

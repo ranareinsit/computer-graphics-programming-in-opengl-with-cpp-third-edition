@@ -1,15 +1,10 @@
 #version 430
-
 layout (triangles) in;
-
 in vec3 varyingNormal[];
-
 out vec3 varyingVertPosG;
 out vec3 varyingLightDirG;
 out vec3 varyingNormalG;
-
 layout (line_strip, max_vertices=2) out;
-
 struct PositionalLight {
 	vec4 ambient;
 	vec4 diffuse;
@@ -22,16 +17,13 @@ struct Material {
 	vec4 specular;  
 	float shininess;
 };
-
 uniform vec4 globalAmbient;
 uniform PositionalLight light;
 uniform Material material;
 uniform mat4 mv_matrix;
 uniform mat4 proj_matrix;
 uniform mat4 norm_matrix;
-
 float sLen = 0.1;
-
 void main(void) {
 	vec3 op0 = gl_in[0].gl_Position.xyz;
 	vec3 op1 = gl_in[1].gl_Position.xyz;

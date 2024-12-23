@@ -1,17 +1,12 @@
 #version 430
-
 layout (triangles) in;
-
 in vec3 varyingNormal[];
 in vec3 varyingLightDir[];
 in vec3 varyingHalfVector[];
-
 out vec3 varyingNormalG;
 out vec3 varyingLightDirG;
 out vec3 varyingHalfVectorG;
-
 layout (triangle_strip, max_vertices=3) out;
-
 struct PositionalLight {
 	vec4 ambient;
 	vec4 diffuse;
@@ -24,7 +19,6 @@ struct Material {
 	vec4 specular;  
 	float shininess;
 };
-
 uniform vec4 globalAmbient;
 uniform PositionalLight light;
 uniform Material material;
@@ -32,7 +26,6 @@ uniform mat4 mv_matrix;
 uniform mat4 proj_matrix;
 uniform mat4 norm_matrix;
 uniform int flipNormal;
-
 void main (void) {
 	vec4 triangleNormal = vec4(
 		(

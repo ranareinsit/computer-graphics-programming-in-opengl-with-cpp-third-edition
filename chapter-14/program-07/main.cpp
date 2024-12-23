@@ -12,32 +12,25 @@
 #include <SOIL2/soil2.h>
 #include <string>
 using namespace std;
-
 float toRadians(float degrees) { return (degrees * 2.0f * 3.14159f) / 360.0f; }
-
 #define numVAOs 1
 #define numVBOs 3
-
 float cameraX, cameraY, cameraZ;
 float objLocX, objLocY, objLocZ;
 GLuint renderingProgram;
 GLuint vao[numVAOs];
 GLuint vbo[numVBOs];
-
 HalfSphere halfSphere(48);
 int numSphereVertices;
-
 GLuint skyTexture;
 const int noiseWidth = 128;
 const int noiseHeight = 128;
 const int noiseDepth = 128;
 double noise[noiseHeight][noiseWidth][noiseDepth];
-
 GLuint mvLoc, projLoc;
 int width, height;
 float aspect;
 glm::mat4 pMat, vMat, mMat, mvMat;
-
 double smoothNoise(double zoom, double x1, double y1, double z1) {
 	double fractX = x1 - (int)x1;
 	double fractY = y1 - (int)y1;
@@ -54,15 +47,12 @@ double smoothNoise(double zoom, double x1, double y1, double z1) {
 	value += (1.0 - fractX) * fractY * (1.0 - fractZ) * noise[(int)x2][(int)y1][(int)z2];
 	value += fractX * (1.0 - fractY) * (1.0 - fractZ) * noise[(int)x1][(int)y2][(int)z2];
 	value += (1.0 - fractX) * (1.0 - fractY) * (1.0 - fractZ) * noise[(int)x2][(int)y2][(int)z2];
-
 	return value;
 }
-
 double logistic(double x) {
 	double k = 0.05;
 	return (1.0 / (1.0 + pow(2.718, -k * x)));
 }
-
 double turbulence(double x, double y, double z, double maxZoom) {
 	double sum = 0.0, zoom = maxZoom, cloudQuant;
 	while (zoom >= 0.9) {
@@ -74,7 +64,6 @@ double turbulence(double x, double y, double z, double maxZoom) {
 	sum = 256.0 * logistic(sum - cloudQuant);
 	return sum;
 }
-
 void fillDataArray(GLubyte data[]) {
 	double maxZoom = 32.0;
 	for (int i = 0; i < noiseHeight; i++) {
@@ -92,7 +81,6 @@ void fillDataArray(GLubyte data[]) {
 		}
 	}
 }
-
 GLuint buildNoiseTexture() {
 	GLuint textureID;
 	GLubyte* data = new GLubyte[noiseHeight * noiseWidth * noiseDepth * 4];
@@ -105,7 +93,6 @@ GLuint buildNoiseTexture() {
 	delete[] data;
 	return textureID;
 }
-
 void generateNoise() {
 	for (int x = 0; x < noiseHeight; x++) {
 		for (int y = 0; y < noiseWidth; y++) {
@@ -115,7 +102,6 @@ void generateNoise() {
 		}
 	}
 }
-
 void setupVertices(void) {
 	std::vector<int> ind = halfSphere.getIndices();
 	std::vector<glm::vec3> vert = halfSphere.getVertices();
@@ -135,21 +121,16 @@ void setupVertices(void) {
 		nvalues.push_back((norm[ind[i]]).y);
 		nvalues.push_back((norm[ind[i]]).z);
 	}
-
 	glGenVertexArrays(1, vao);
 	glBindVertexArray(vao[0]);
 	glGenBuffers(numVBOs, vbo);
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(GL_ARRAY_BUFFER, pvalues.size() * 4, &pvalues[0], GL_STATIC_DRAW);
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, tvalues.size() * 4, &tvalues[0], GL_STATIC_DRAW);
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
 	glBufferData(GL_ARRAY_BUFFER, nvalues.size() * 4, &nvalues[0], GL_STATIC_DRAW);
 }
-
 void init(GLFWwindow* window) {
 	renderingProgram = Utils::createShaderProgram("vertShader.glsl", "fragShader.glsl");
 	cameraX = 0.0f; cameraY = 2.0f; cameraZ = 10.0f;
@@ -161,7 +142,6 @@ void init(GLFWwindow* window) {
 	generateNoise();
 	skyTexture = buildNoiseTexture();
 }
-
 void display(GLFWwindow* window, double currentTime) {
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -173,34 +153,27 @@ void display(GLFWwindow* window, double currentTime) {
 	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(objLocX, objLocY, objLocZ));
 	mMat = glm::scale(glm::mat4(1.0f), glm::vec3(4.0f, 4.0f, 4.0f));
 	mvMat = vMat * mMat;
-
 	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);
-
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_3D, skyTexture);
-
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glDrawArrays(GL_TRIANGLES, 0, numSphereVertices);
 }
-
 void window_size_callback(GLFWwindow* win, int newWidth, int newHeight) {
 	aspect = (float)newWidth / (float)newHeight;
 	glViewport(0, 0, newWidth, newHeight);
 	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
 }
-
 int main(void) {
 	if (!glfwInit()) { exit(EXIT_FAILURE); }
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);

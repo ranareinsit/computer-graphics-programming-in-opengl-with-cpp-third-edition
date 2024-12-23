@@ -34,3 +34,6 @@ Chapter 6
 [src](./chapter-06/program-02)
 
 ---
+
+
+<!--  foreach($i in 1..13 ){mkdir "program-${i}"} -->

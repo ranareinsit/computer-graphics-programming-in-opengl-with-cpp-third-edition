@@ -2,11 +2,8 @@
 #include <fstream>
 #include <glm/glm.hpp>
 #include <sstream>
-
 using namespace std;
-
 ImportedModel::ImportedModel() {}
-
 ImportedModel::ImportedModel(const char* filePath) {
 	ModelImporter modelImporter = ModelImporter();
 	modelImporter.parseOBJ(filePath);
@@ -14,21 +11,17 @@ ImportedModel::ImportedModel(const char* filePath) {
 	std::vector<float> verts = modelImporter.getVertices();
 	std::vector<float> tcs = modelImporter.getTextureCoordinates();
 	std::vector<float> normals = modelImporter.getNormals();
-
 	for (int i = 0; i < numVertices; i++) {
 		vertices.push_back(glm::vec3(verts[i * 3], verts[i * 3 + 1], verts[i * 3 + 2]));
 		texCoords.push_back(glm::vec2(tcs[i * 2], tcs[i * 2 + 1]));
 		normalVecs.push_back(glm::vec3(normals[i * 3], normals[i * 3 + 1], normals[i * 3 + 2]));
 	}
 }
-
 int ImportedModel::getNumVertices() { return numVertices; }
 std::vector<glm::vec3> ImportedModel::getVertices() { return vertices; }
 std::vector<glm::vec2> ImportedModel::getTextureCoords() { return texCoords; }
 std::vector<glm::vec3> ImportedModel::getNormals() { return normalVecs; }
-
 ModelImporter::ModelImporter() {}
-
 void ModelImporter::parseOBJ(const char* filePath) {
 	float x, y, z;
 	string content;
@@ -65,18 +58,14 @@ void ModelImporter::parseOBJ(const char* filePath) {
 				getline(oneCornerSS, v, '/');
 				getline(oneCornerSS, t, '/');
 				getline(oneCornerSS, n, '/');
-
 				int vertRef = (stoi(v) - 1) * 3;
 				int tcRef = (stoi(t) - 1) * 2;
 				int normRef = (stoi(n) - 1) * 3;
-
 				triangleVerts.push_back(vertVals[vertRef]);
 				triangleVerts.push_back(vertVals[vertRef + 1]);
 				triangleVerts.push_back(vertVals[vertRef + 2]);
-
 				textureCoords.push_back(stVals[tcRef]);
 				textureCoords.push_back(stVals[tcRef + 1]);
-
 				normals.push_back(normVals[normRef]);
 				normals.push_back(normVals[normRef + 1]);
 				normals.push_back(normVals[normRef + 2]);

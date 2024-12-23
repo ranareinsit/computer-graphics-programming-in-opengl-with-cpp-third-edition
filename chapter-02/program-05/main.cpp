@@ -4,13 +4,9 @@
 #include <fstream>
 #include <string>
 #include <memory>
-
 #define numVAOs 1
-
 GLuint renderingProgram;
 GLuint vao[numVAOs];
-
-// Read file into a string
 std::string readFile(const char* filePath) {
     std::ifstream fileStream(filePath);
     if (!fileStream) {
@@ -19,8 +15,6 @@ std::string readFile(const char* filePath) {
     }
     return { std::istreambuf_iterator<char>{fileStream}, std::istreambuf_iterator<char>{} };
 }
-
-// Check shader compilation errors
 void checkShaderCompilation(GLuint shader) {
     GLint compiled = 0;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
@@ -33,8 +27,6 @@ void checkShaderCompilation(GLuint shader) {
         exit(EXIT_FAILURE);
     }
 }
-
-// Check program linking errors
 void checkProgramLinking(GLuint program) {
     GLint linked = 0;
     glGetProgramiv(program, GL_LINK_STATUS, &linked);
@@ -47,59 +39,42 @@ void checkProgramLinking(GLuint program) {
         exit(EXIT_FAILURE);
     }
 }
-
-// Create the shader program
 GLuint createShaderProgram() {
     GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
     GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
     GLuint program = glCreateProgram();
-
-    // Read shaders from file
     auto vertShaderStr = readFile("vertShader.glsl");
     auto fragShaderStr = readFile("fragShader.glsl");
-
     const char* vertShaderSrc = vertShaderStr.c_str();
     const char* fragShaderSrc = fragShaderStr.c_str();
-
     glShaderSource(vShader, 1, &vertShaderSrc, nullptr);
     glShaderSource(fShader, 1, &fragShaderSrc, nullptr);
-
     glCompileShader(vShader);
     checkShaderCompilation(vShader);
-
     glCompileShader(fShader);
     checkShaderCompilation(fShader);
-
     glAttachShader(program, vShader);
     glAttachShader(program, fShader);
-
     glLinkProgram(program);
     checkProgramLinking(program);
-
     return program;
 }
-
-// Initialize OpenGL
 void init(GLFWwindow* window) {
     renderingProgram = createShaderProgram();
     glGenVertexArrays(numVAOs, vao);
     glBindVertexArray(vao[0]);
 }
-
-// Display callback
 void display(GLFWwindow* window, double currentTime) {
     glClear(GL_COLOR_BUFFER_BIT);
     glUseProgram(renderingProgram);
     glPointSize(30.0f);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
-
 int main() {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
         return EXIT_FAILURE;
     }
-
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     GLFWwindow* window = glfwCreateWindow(400, 200, "program 0205", nullptr, nullptr);
@@ -108,7 +83,6 @@ int main() {
         glfwTerminate();
         return EXIT_FAILURE;
     }
-
     glfwMakeContextCurrent(window);
     if (glewInit() != GLEW_OK) {
         std::cerr << "Failed to initialize GLEW" << std::endl;
@@ -116,17 +90,13 @@ int main() {
         glfwTerminate();
         return EXIT_FAILURE;
     }
-
     glfwSwapInterval(1);
-
     init(window);
-
     while (!glfwWindowShouldClose(window)) {
         display(window, glfwGetTime());
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
     glfwDestroyWindow(window);
     glfwTerminate();
     return EXIT_SUCCESS;

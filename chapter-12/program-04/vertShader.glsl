@@ -1,11 +1,8 @@
 #version 430
-
 out vec2 tc;
-
 uniform mat4 mvp_matrix;
 layout (binding = 0) uniform sampler2D tex_color;
 layout (binding = 1) uniform sampler2D tex_height;
-
 void main(void) {
 	const vec2 patchTexCoords[] = vec2[] (
 		vec2(0,0), 

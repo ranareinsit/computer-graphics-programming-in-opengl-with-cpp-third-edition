@@ -1,7 +1,6 @@
 #include <cmath>
 #include <glm/glm.hpp>
 #include <vector>
-
 class Torus {
 private:
 	int numVertices;
@@ -17,7 +16,6 @@ private:
 	std::vector<glm::vec3> tTangents;
 	void init();
 	float toRadians(float degrees);
-
 public:
 	Torus();
 	Torus(float inner, float outer, int prec);

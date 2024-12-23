@@ -1,9 +1,7 @@
 #include <glm/glm.hpp>
 #include <sstream>
 #include <vector>
-
-class ImportedModel
-{
+class ImportedModel {
 private:
 	int numVertices;
 	std::vector<glm::vec3> vertices;
@@ -17,9 +15,7 @@ public:
 	std::vector<glm::vec2> getTextureCoords();
 	std::vector<glm::vec3> getNormals();
 };
-
-class ModelImporter
-{
+class ModelImporter {
 private:
 	std::vector<float> vertVals;
 	std::vector<float> triangleVerts;

@@ -4,17 +4,13 @@
 #include <glm/glm.hpp>
 #include "HalfSphere.h"
 using namespace std;
-
 HalfSphere::HalfSphere() {
 	init(48);
 }
-
 HalfSphere::HalfSphere(int prec) {
 	init(prec);
 }
-
 float HalfSphere::toRadians(float degrees) { return (degrees * 2.0f * 3.14159f) / 360.0f; }
-
 void HalfSphere::init(int prec) {
 	numVertices = (prec + 1) * (prec + 1);
 	numIndices = prec * prec * 6;
@@ -22,8 +18,7 @@ void HalfSphere::init(int prec) {
 	for (int i = 0; i < numVertices; i++) { texCoords.push_back(glm::vec2()); }
 	for (int i = 0; i < numVertices; i++) { normals.push_back(glm::vec3()); }
 	for (int i = 0; i < numIndices; i++) { indices.push_back(0); }
-
-	// calculate triangle vertices
+	
 	for (int i = 0; i <= prec; i++) {
 		for (int j = 0; j <= prec; j++) {
 			float y = (float)cos(toRadians(90.0f - i * 90.0f / prec));
@@ -34,7 +29,7 @@ void HalfSphere::init(int prec) {
 			normals[i*(prec + 1) + j] = glm::vec3(x, y, z);
 		}
 	}
-	// calculate triangle indices
+	
 	for (int i = 0; i<prec; i++) {
 		for (int j = 0; j<prec; j++) {
 			indices[6 * (i*prec + j) + 0] = i*(prec + 1) + j;
@@ -46,7 +41,6 @@ void HalfSphere::init(int prec) {
 		}
 	}
 }
-
 int HalfSphere::getNumVertices() { return numVertices; }
 int HalfSphere::getNumIndices() { return numIndices; }
 std::vector<int> HalfSphere::getIndices() { return indices; }
