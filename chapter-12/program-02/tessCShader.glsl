@@ -2,11 +2,13 @@
 in vec2 tc[];
 out vec2 tcs_out[];
 uniform mat4 mvp_matrix;
-layout (binding=0) uniform sampler2D tex_color;
-layout (vertices = 16) out;
-void main(void) {
+layout(binding = 0) uniform sampler2D tex_color;
+layout(vertices = 16) out;
+void main(void)
+{
 	int TL = 32;
-	if (gl_InvocationID ==0){
+	if (gl_InvocationID == 0)
+	{
 		gl_TessLevelOuter[0] = TL;
 		gl_TessLevelOuter[2] = TL;
 		gl_TessLevelOuter[1] = TL;

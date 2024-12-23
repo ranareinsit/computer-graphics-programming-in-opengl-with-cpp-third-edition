@@ -48,9 +48,9 @@ void init(GLFWwindow* window) {
 	glGenVertexArrays(1, vao);
 	glBindVertexArray(vao[0]);
 	glGenBuffers(numVBOs, vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);  
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(windowQuadVerts), windowQuadVerts, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]); 
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(windowQuadUVs), windowQuadUVs, GL_STATIC_DRAW);
 	raytraceComputeShader = Utils::createShaderProgram("raytraceComputeShader.glsl");
 	screenQuadShader = Utils::createShaderProgram("vertShader.glsl", "fragShader.glsl");

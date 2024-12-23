@@ -91,3 +91,9 @@ add_subdirectory(chapter-16/program-11)
 add_subdirectory(chapter-16/program-12)
 add_subdirectory(chapter-16/program-13)
 #
+add_subdirectory(chapter-17/program-1)
+add_subdirectory(chapter-17/program-2)
+add_subdirectory(chapter-17/program-3)
+add_subdirectory(chapter-17/program-4)
+add_subdirectory(chapter-17/program-5)
+#
